@@ -2,10 +2,22 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/css/style.css' />
   </head>
   <body>
     <h1><%= title %></h1>
     <p>EJS Welcome to <%= title %></p>
+    <div id="entry"></div>
+    <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io('http://localhost:3001');
+      socket.on('ack', function (data) {
+        console.log(data);
+      });
+      $(document).on('click', function() {
+        $.post('/api/multi');
+      });
+    </script>
   </body>
 </html>

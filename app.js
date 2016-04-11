@@ -8,15 +8,18 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
+const less = require('koa-less-middleware');
+const koaStatic = require('koa-static');
 
 const index = require('./routes/index');
-const users = require('./routes/users');
+const api = require('./routes/api');
 
 // middlewares
 app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(logger()));
-app.use(convert(require('koa-static')(__dirname + '/public')));
+app.use(convert(less(__dirname + '/public')));
+app.use(convert(koaStatic(__dirname + '/public')));
 
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
@@ -28,10 +31,11 @@ app.use(async (ctx, next) => {
   await next();
   const ms = new Date() - start;
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+  ctx.set('ms', ms);
 });
 
 router.use('/', index.routes(), index.allowedMethods());
-router.use('/users', users.routes(), users.allowedMethods());
+router.use('/api', api.routes(), api.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 // response
