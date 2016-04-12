@@ -15,8 +15,11 @@ exports.multi = function(ctx, next) {
 
   };
   sender(reqOpts, option, (id, body) => {
-    broadcast('ack', {id, body});
+    broadcast('info', {id, body});
   });
 
-  ctx.body = "fine";
+  ctx.body = {
+    status: 0,
+    info: 'ok'
+  };
 };
