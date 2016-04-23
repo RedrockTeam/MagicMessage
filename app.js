@@ -45,4 +45,5 @@ app.on('error', function(err, ctx){
   log.error('server error', err, ctx);
 });
 
+require('./service/bootstrap');
 module.exports = app;

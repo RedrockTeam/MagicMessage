@@ -4,11 +4,19 @@
  * @Email i@zeroling.com
  */
 import fs from 'fs';
-import { isPlainObject } from 'lodash';
+import lodash, { isPlainObject, defaultsDeep } from 'lodash';
 const defaultConfig = {
-  port: 3001
+  port: 3000,
+
+  db: {
+    host: 'localhost',
+    database: 'MagicMessage',
+    username: 'root',
+    password: ''
+  }
 };
-const cfgs = [defaultConfig];
+
+const cfgs = [];
 fs.readdirSync(__dirname).map(filename => {
   if (filename === 'index.js') {
     return false;
@@ -16,10 +24,11 @@ fs.readdirSync(__dirname).map(filename => {
   try {
     const cfg = require('./' + filename);
     if (isPlainObject(cfg)) {
-      defaultConfig.push(cfg);
+      cfgs.push(cfg);
     }
   } catch (e) {}
 });
+cfgs.push(defaultConfig);
 
-const config = Object.assign.apply(Object, cfgs);
+const config = defaultsDeep.apply(lodash, cfgs);
 export default config

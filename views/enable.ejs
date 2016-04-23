@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>开启通知</title>
+
+  <link href="//res.wx.qq.com/open/libs/weui/0.4.1/weui.min.css" rel="stylesheet">
+  <style>
+    body {
+      overflow-x: hidden;
+      background-color: #fbf9fe;
+    }
+    #container {
+
+    }
+    .hd {
+      padding: 2em 0;
+    }
+    .pg_title {
+      color: #225fba;
+      text-align: center;
+      font-size: 34px;
+      font-weight: 400;
+      margin: 0 15%;
+    }
+
+  </style>
+</head>
+<body ontouchstart="">
+<div id="container">
+  <div class="hd">
+    <h1 class="pg_title">通知推送中心</h1>
+  </div>
+  <div class="bd">
+    <div class="weui_cells_title">课表推送提醒</div>
+    <div class="weui_cells weui_cells_form">
+      <div class="weui_cell weui_cell_switch">
+        <div class="weui_cell_hd weui_cell_primary">每日推送</div>
+        <div class="weui_cell_ft">
+          <input id="everyDay" class="weui_switch" type="checkbox" v-model="everyDay">
+        </div>
+      </div>
+      <div class="weui_cell weui_cell_switch">
+        <div class="weui_cell_hd weui_cell_primary">每课推送</div>
+        <div class="weui_cell_ft">
+          <input id="everyClass" class="weui_switch" type="checkbox" v-model="everyClass">
+        </div>
+      </div>
+    </div>
+    <div class="weui_btn_area">
+      <button class="weui_btn weui_btn_primary" v-on:click="save">保存</button>
+    </div>
+  </div>
+
+  <div id="loadingToast" class="weui_loading_toast" v-show="showLoading">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+      <div class="weui_loading">
+        <!-- :) -->
+        <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+        <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+      </div>
+      <p class="weui_toast_content">数据加载中</p>
+    </div>
+  </div>
+</div>
+<script type="text/html" id="tplMsg">
+  <div class="weui_msg">
+    <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+    <div class="weui_text_area">
+      <h2 class="weui_msg_title">保存成功</h2>
+      <p class="weui_msg_desc">小帮手会主动提醒你上课哟</p>
+    </div>
+    <div class="weui_opr_area">
+      <p class="weui_btn_area">
+        <button id="getBack" class="weui_btn weui_btn_primary">返回</button>
+      </p>
+    </div>
+  </div>
+</script>
+<script src="//a.alipayobjects.com/??amui/zepto/1.1.3/zepto.js,static/fastclick/1.0.6/fastclick.min.js"></script>
+<script>FastClick.attach(document.body);</script>
+<script src="//cdn.bootcss.com/vue/1.0.15/vue.min.js"></script>
+<script>
+  var openid = (location.pathname.match(/\/enable\/openid\/(.*)/) || [, ''])[1];
+  var vm = new Vue({
+    el: "#container",
+    data: {
+      everyDay: false,
+      everyClass: false,
+      showLoading: true
+    },
+    methods: {
+      save: function(ev) {
+        this.showLoading = true;
+        $.ajax({
+          type: 'POST',
+          url: "/api/updateState",
+          data: {
+            type: 'kebiao',
+            openid: openid,
+            everyDay: this.everyDay,
+            everyClass:  this.everyClass
+          },
+          success: function(data) {
+            if (data && data['status'] === 0) {
+              $('#container').html($('#tplMsg').html());
+            } else {
+              vm.showLoading = false;
+              alert('保存出错!');
+              console.log(data);
+            }
+          }
+        })
+      }
+    }
+  });
+  vm.$watch('everyDay', function (state) {
+    if (true === state) {
+      this.everyClass = false;
+    }
+  });
+  vm.$watch('everyClass', function (state) {
+    if (true === state) {
+      this.everyDay = false;
+    }
+  });
+
+  $.ajax({
+    type: "POST",
+    url: "/api/status",
+    data: {openid: openid},
+    success: function(data) {
+      vm.showLoading = false;
+      if (data && data['status'] === 0) {
+        vm.everyClass = data['data']['everyClass'];
+        vm.everyDay = data['data']['everyDay'];
+      }
+    }
+  });
+
+  $('body').on('click', '#getBack', function() {
+    WeixinJSBridge.call('closeWindow');
+  });
+</script>
+</body>
+</html>

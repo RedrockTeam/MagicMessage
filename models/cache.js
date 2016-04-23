@@ -1,28 +1,22 @@
 /**
- * Created at 16/4/12.
+ * Created at 16/4/23.
  * @Author Ling.
  * @Email i@zeroling.com
  */
 import Sequelize from 'sequelize';
 import DB from './connection';
 
-const Schedule = DB.define('schedule', {
+const Cache = DB.define('cache', {
   id: {
     type: Sequelize.INTEGER.UNSIGNED,
     primaryKey: true,
     autoIncrement: true
   },
-  openid: {
-    type: Sequelize.STRING(40),
-    allowNull: false
-  },
-  template_id: Sequelize.STRING(50),
-  type: {
-    type: Sequelize.STRING(15),
-    defaultValue: "fixed"
-  },
+  type: Sequelize.STRING(30),
+  key: Sequelize.STRING(100),
+  expire: Sequelize.STRING(50),
   data: {
-    type: Sequelize.STRING(200),
+    type: Sequelize.STRING(5000),
     get: function()  {
       const data = this.getDataValue('data');
       try {
@@ -38,8 +32,8 @@ const Schedule = DB.define('schedule', {
   }
 });
 
-Schedule.sync().then(() => {
-  console.log('table schedule synced');
+Cache.sync().then(() => {
+  console.log('table cache synced');
 });
 
-export default Schedule;
+export default Cache;

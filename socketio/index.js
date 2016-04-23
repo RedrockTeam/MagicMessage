@@ -11,7 +11,7 @@ function ioConnectionHandler(socket) {
   socket.on('disconnect', () => {
     socketStore.delete(socket);
   });
-  socket.emit('ack', {b: 2});
+  socket.emit('ack', {state: 0, info: 'ok'});
 }
 
 module.exports = ioConnectionHandler;

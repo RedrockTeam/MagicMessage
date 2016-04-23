@@ -6,21 +6,14 @@
 import Sequelize from 'sequelize';
 import DB from './connection';
 
-const Schedule = DB.define('schedule', {
+const Task = DB.define('task', {
   id: {
     type: Sequelize.INTEGER.UNSIGNED,
     primaryKey: true,
     autoIncrement: true
   },
-  openid: {
-    type: Sequelize.STRING(40),
-    allowNull: false
-  },
-  template_id: Sequelize.STRING(50),
-  type: {
-    type: Sequelize.STRING(15),
-    defaultValue: "fixed"
-  },
+  time: Sequelize.STRING(30),
+  schedule_id: Sequelize.INTEGER.UNSIGNED,
   data: {
     type: Sequelize.STRING(200),
     get: function()  {
@@ -38,8 +31,8 @@ const Schedule = DB.define('schedule', {
   }
 });
 
-Schedule.sync().then(() => {
-  console.log('table schedule synced');
+Task.sync().then(() => {
+  console.log('table Task synced');
 });
 
-export default Schedule;
+export default Task;
