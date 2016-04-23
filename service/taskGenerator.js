@@ -60,11 +60,13 @@ async function GenKebiao(schedule, task) {
       return async function() {
         await sendModelTemplateHttp(openid, schedule['template_id'], url, '#FF0000', data);
       }
+    } else {
+      return () => {};
     }
   } else if (schedule['data']['type'] === 'everyDay') {
     // todo ...
   }
-
+  return function() {};
 }
 
 /**

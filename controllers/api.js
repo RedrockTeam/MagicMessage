@@ -6,6 +6,7 @@
 import sender from '../service/multi_thread_sender';
 import broadcast from '../socketio/broadcast';
 import modelSchedule from '../models/schedule';
+import modelTask from '../models/task';
 import nodeSchedule from 'node-schedule';
 import taskGenerator from '../service/taskGenerator';
 
@@ -82,12 +83,27 @@ exports.addSchedule = async function(ctx, next) {
  * @param next
  */
 exports.status = async function(ctx, next) {
+  const param = ctx.request.body;
+  if (!param || !param['openid']) {
+    return ctx.body = {
+      status: 400,
+      info: 'openid not valid'
+    };
+  }
+  const openid = param.openid;
+  const schedule = await modelSchedule.findOne({where: {openid: openid}});
+  let everyClass = false, everyDay = false;
+  if (schedule.data['type'] == 'everyClass') {
+    everyClass = true;
+  } else if (schedule.data['type'] == 'everyDay') {
+    everyDay = true;
+  }
   return ctx.body = {
     status: 0,
     info: 'ok',
     data: {
-      everyDay: true,
-      everyClass: false
+      everyDay: everyDay,
+      everyClass: everyClass
     }
   }
 };
