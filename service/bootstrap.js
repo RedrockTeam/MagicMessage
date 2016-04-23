@@ -14,7 +14,10 @@ import taskGenerator from './taskGenerator';
 
 const scheduled = schedule.scheduleJob('*/1 * * * *', () => {
   const nowMinute = moment().format('HH:mm');
-  modelTask.findAll({where: {time: nowMinute}}).then(async tasks => {
+  const nowDate = moment().format('YYYY-MM-DD');
+  modelTask.findAll({where: {
+    $or: [{date: '', time: nowMinute}, {date: nowDate, time: nowMinute}]
+  }}).then(async tasks => {
     for (let task of tasks) {
       const schedule = await modelSchedule.findById(task.schedule_id);
       const _task = await taskGenerator(schedule.get({plain: true}), task.get({plain: true}));

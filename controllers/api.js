@@ -9,6 +9,7 @@ import modelSchedule from '../models/schedule';
 import modelTask from '../models/task';
 import nodeSchedule from 'node-schedule';
 import taskGenerator from '../service/taskGenerator';
+import moment from 'moment';
 
 /**
  * 群发 HTTP 请求
@@ -41,35 +42,34 @@ exports.multi = function(ctx, next) {
  */
 exports.addSchedule = async function(ctx, next) {
   const params = ctx.request.body;
-  if (!params && params['openid']) {
+  if (!params || !params['openid']) {
     return ctx.body = {
       status: 1,
       info: 'openid null'
     };
   }
-
-  // crontab 格式参照 https://www.npmjs.com/package/node-schedule
-  if (!params && params['crontab']) {
+  if (!params || !params['remindTs']) {
     return ctx.body = {
       status: 1,
-      info: 'crontab null'
+      info: 'remindTs null'
     };
   }
 
-  if (!params && params['template_id']) {
-    return ctx.body = {
-      status: 1,
-      info: 'template_id null'
-    };
-  }
-
-  const record = await modelSchedule.build({
+  const schedule = await modelSchedule.create({
     openid: params['openid'],
-    crontab: params['crontab'],
-    template_id: params['template_id'],
-    type: params['type'] || 'text'
-  }).save();
-  nodeSchedule.scheduleJob(params['crontab'], taskGenerator(record));
+    template_id: 'zSA4pm2qqMbA4el7GWCE75oRM1V340hwqiGUv7LmJ7Q',
+    type: 'remind',
+    data: {
+      event: params['event']
+    }
+  });
+  const paramDate = moment(parseInt(params['remindTs']));
+  const task = await modelTask.create({
+    date: paramDate.format('YYYY-MM-DD'),
+    time: paramDate.format('HH:mm'),
+    schedule_id: schedule.id,
+    data: { type: 'remind' }
+  });
 
   return ctx.body = {
     status: 0,
@@ -100,7 +100,7 @@ exports.status = async function(ctx, next) {
   } else if (schedule.data['type'] == 'everyDay') {
     everyDay = true;
   }
-  
+
   return ctx.body = {
     status: 0,
     info: 'ok',

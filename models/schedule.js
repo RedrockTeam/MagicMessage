@@ -22,7 +22,7 @@ const Schedule = DB.define('schedule', {
     defaultValue: "fixed"
   },
   data: {
-    type: Sequelize.STRING(200),
+    type: Sequelize.STRING(2000),
     get: function()  {
       const data = this.getDataValue('data');
       try {

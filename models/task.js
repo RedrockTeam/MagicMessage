@@ -12,6 +12,10 @@ const Task = DB.define('task', {
     primaryKey: true,
     autoIncrement: true
   },
+  date: {
+    type: Sequelize.STRING(30),
+    defaultValue: ''
+  },
   time: Sequelize.STRING(30),
   schedule_id: Sequelize.INTEGER.UNSIGNED,
   data: {

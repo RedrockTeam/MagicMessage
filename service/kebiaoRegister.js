@@ -7,18 +7,23 @@ import modelSchedule from '../models/schedule';
 import modelTask from '../models/task';
 
 const Times = {
-  everyDay: ['7:45'],
+  everyDay: ['22:00'],
   everyClass: ['7:50', '9:50', '13:50', '15:55', '18:50', '20:40'],
   none: []
 };
-
+const templateIds = {
+  everyDay: '7R2_kbC_FoXP7o9oFWxpkzvzgcz04L8CpjfG6g7NkRA',
+  everyClass: 'XgBPsF4rb4A0GUkoP-WgsFwhVUpgKv8G1SMevcKLWLc',
+  none: ''
+};
 export default async function(openid, type) {
   modelSchedule.findOrCreate({
     where: {openid: openid},
-    defaults: { openid: openid, template_id: "XgBPsF4rb4A0GUkoP-WgsFwhVUpgKv8G1SMevcKLWLc", type: 'kebiao', data: {type: type} }
+    defaults: { openid: openid, template_id: templateIds[type], type: 'kebiao', data: {type: type} }
   }).spread(function(schedule, created) {
     if (!created) {
       schedule.update({
+        template_id: templateIds[type],
         data: {type: type}
       }).then(function() {});
     }
