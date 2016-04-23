@@ -10,6 +10,7 @@ const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
 const less = require('koa-less-middleware');
 const koaStatic = require('koa-static');
+const config = require('./config');
 
 const index = require('./routes/index');
 const api = require('./routes/api');
@@ -34,8 +35,9 @@ app.use(async (ctx, next) => {
   ctx.set('ms', ms);
 });
 
-router.use('/', index.routes(), index.allowedMethods());
-router.use('/api', api.routes(), api.allowedMethods());
+let routerPrefix = config.routerPrefix ? '/' + config.routerPrefix : '';
+router.use(routerPrefix + '/', index.routes(), index.allowedMethods());
+router.use(routerPrefix + '/api', api.routes(), api.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 // response

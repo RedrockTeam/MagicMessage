@@ -7,7 +7,7 @@ import fs from 'fs';
 import lodash, { isPlainObject, defaultsDeep } from 'lodash';
 const defaultConfig = {
   port: 3000,
-
+  routerPrefix: '', // url "根目录"
   db: {
     host: 'localhost',
     database: 'MagicMessage',

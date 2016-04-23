@@ -94,6 +94,7 @@
 <script src="//cdn.bootcss.com/vue/1.0.15/vue.min.js"></script>
 <script>
   var openid = (location.pathname.match(/\/enable\/openid\/(.*)/) || [, ''])[1];
+  var urlPrefix = (location.pathname.match(/^(\/.*)\/enable/) || [, ''])[1];
   var vm = new Vue({
     el: "#container",
     data: {
@@ -106,7 +107,7 @@
         this.showLoading = true;
         $.ajax({
           type: 'POST',
-          url: "/api/updateState",
+          url: urlPrefix + "/api/updateState",
           data: {
             type: 'kebiao',
             openid: openid,
@@ -139,7 +140,7 @@
 
   $.ajax({
     type: "POST",
-    url: "/api/status",
+    url: urlPrefix + "/api/status",
     data: {openid: openid},
     success: function(data) {
       vm.showLoading = false;
