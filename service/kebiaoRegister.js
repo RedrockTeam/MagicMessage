@@ -8,7 +8,8 @@ import modelTask from '../models/task';
 
 const Times = {
   everyDay: ['7:45'],
-  everyClass: ['7:50', '9:50', '13:50', '15:55', '18:50', '20:40']
+  everyClass: ['7:50', '9:50', '13:50', '15:55', '18:50', '20:40'],
+  none: []
 };
 
 export default async function(openid, type) {

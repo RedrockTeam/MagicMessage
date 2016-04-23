@@ -93,11 +93,14 @@ exports.status = async function(ctx, next) {
   const openid = param.openid;
   const schedule = await modelSchedule.findOne({where: {openid: openid}});
   let everyClass = false, everyDay = false;
-  if (schedule.data['type'] == 'everyClass') {
+  if (!schedule) {
+    // false and false
+  } else if (schedule.data['type'] == 'everyClass') {
     everyClass = true;
   } else if (schedule.data['type'] == 'everyDay') {
     everyDay = true;
   }
+  
   return ctx.body = {
     status: 0,
     info: 'ok',
