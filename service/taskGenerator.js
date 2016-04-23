@@ -23,8 +23,7 @@ async function GenKebiao(schedule, task) {
     const courseNo = task['data']['courseNo'];
     const kebiao = JSON.parse(kebiaoInfo.course);
     const nowWeek = kebiao['nowWeek'];
-    // const hash_today = ((new Date).getDay() + 6) % 7;
-    const hash_today = 2;
+    const hash_today = ((new Date).getDay() + 6) % 7;
     const course = kebiao['data'].filter(kb => {
       if (kb['hash_day'] != hash_today) return false;
       if (kb['hash_lesson'] != courseNo) return false;
