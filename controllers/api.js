@@ -120,7 +120,7 @@ exports.updateState = async function(ctx, next) {
       info: 'param not valid'
     };
   }
-  console.log(param);
+  
   if ('true' == param['everyDay']) {
     await kebiaoRegister(param['openid'], 'everyDay');
   } else if ('true' == param['everyClass']) {

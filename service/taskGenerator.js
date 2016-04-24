@@ -47,7 +47,6 @@ async function GenKebiao(schedule, task) {
   const kebiao = JSON.parse(kebiaoInfo.course);
   const nowWeek = kebiao['nowWeek'];
   const hash_today = ((new Date).getDay() + 6) % 7;
-  console.log(schedule['data']['type']);
   if (schedule['data']['type'] === 'everyClass') {
     const courseNo = task['data']['courseNo'];
     const course = kebiao['data'].filter(kb => {
@@ -120,7 +119,7 @@ async function GenKebiao(schedule, task) {
       await sendModelTemplateHttp(openid, schedule['template_id'], url, '#FF0000', data);
     }
   }
-  return function() {};
+  return async function() {};
 }
 
 /**
@@ -137,7 +136,7 @@ export default async function(schedule, task) {
     case 'kebiao':
           return await GenKebiao(schedule, task);
   }
-  return function() {
+  return async function() {
     console.log('nothing matched');
   };
 }

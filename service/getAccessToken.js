@@ -23,10 +23,12 @@ async function getRemoteAccessToken() {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   });
-  const remote = JSON.parse(remoteBody);
-  if (remote && remote['info'] === 'success') {
-    return remote['data'];
-  } else {
+  try {
+    const remote = JSON.parse(remoteBody);
+    if ( remote && remote['info'] === 'success' ) {
+      return remote['data'];
+    }
+  } catch(e) {
     return '';
   }
 }
@@ -61,7 +63,7 @@ export default async function() {
     });
   }
 
-  return remote['data'];
+  return _accessToken;
 }
 
 

@@ -21,7 +21,7 @@ const scheduled = schedule.scheduleJob('*/1 * * * *', () => {
     for (let task of tasks) {
       const schedule = await modelSchedule.findById(task.schedule_id);
       const _task = await taskGenerator(schedule.get({plain: true}), task.get({plain: true}));
-      ('function' === typeof _task) && _task();
+      ('function' === typeof _task) && await _task();
     }
   });
 });

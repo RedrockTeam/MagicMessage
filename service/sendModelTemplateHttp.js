@@ -20,6 +20,8 @@ export default async function(touser, templateId, url, topColor = "#FF0000", dat
     },
     json: true
   });
-  console.log($return);
+  if ($return && $return['errcode'] == 0) {
+    console.log(`给openid: ${touser}} 的模板消息发送成功`);
+  }
   return $return;
 }
