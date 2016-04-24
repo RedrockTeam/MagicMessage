@@ -73,7 +73,8 @@ exports.addSchedule = async function(ctx, next) {
 
   return ctx.body = {
     status: 0,
-    info: 'ok'
+    info: 'ok',
+    taskId: task.id
   };
 };
 
@@ -120,7 +121,7 @@ exports.updateState = async function(ctx, next) {
       info: 'param not valid'
     };
   }
-  
+
   if ('true' == param['everyDay']) {
     await kebiaoRegister(param['openid'], 'everyDay');
   } else if ('true' == param['everyClass']) {
