@@ -151,24 +151,26 @@ exports.instantMessage = async function(ctx, next) {
   }
   const sender = param['sender'] || '匿名';
   const tid = 'vJ2Sf-qkhB9rXPqeMRx1JzjsD03xg7g6dfSx0EYnWtc';
-  const data = {
-    "first": {
-      "value": "有人发给你一个新的悄悄话",
-      "color": "#173177"
-    },
-    "keyword1": {
-      "value": sender,
-      "color": "#173177"
-    },
-    "keyword2": {
-      "value": moment().format('YYYY-MM-DD HH:mm:ss'),
-      "color": "#FF0099"
-    },
-    "remark": {
-      "value": param['message'],
-      "color": "#173177"
-    }
-  };
+  for (let openid of param['openid'].split('|')) {
+    const data = {
+      "first": {
+        "value": "有人发给你一个新的悄悄话",
+        "color": "#173177"
+      },
+      "keyword1": {
+        "value": sender,
+        "color": "#173177"
+      },
+      "keyword2": {
+        "value": moment().format('YYYY-MM-DD HH:mm:ss'),
+        "color": "#FF0099"
+      },
+      "remark": {
+        "value": param['message'],
+        "color": "#173177"
+      }
+    };
 
-  templateSender(param['openid'], tid, param['url'] || '', '#FF0000', data);
+    await templateSender(openid, tid, param['url'] || '', '#FF0000', data);
+  }
 };
