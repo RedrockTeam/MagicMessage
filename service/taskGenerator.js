@@ -40,6 +40,7 @@ async function GenText(schedule, task) {
   }
 }
 
+const courseHashMap = ['一二节', '三四节', '七八节', '九十节', '十十一节'];
 async function GenKebiao(schedule, task) {
   const openid = schedule['openid'];
   const url = schedule['data']['url'] || task['data']['url'] || `http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/CourseTable/CourseTable/index/openid/${openid}/token/gh_68f0a1ffc303.html`;
@@ -93,10 +94,11 @@ async function GenKebiao(schedule, task) {
       let tomorrow_day = hash_today == 6 ? 0 : hash_today + 1;
       let tomorrow_week = hash_today == 6 ? nowWeek + 1 : nowWeek;
       if (kb['hash_day'] == tomorrow_day && kb['week'].indexOf(tomorrow_week) > -1) {
-        return kb['course'];
+        return true;
       }
       return false;
-    });
+    }).map(kb => `${courseHashMap[kb['hash_lesson']]}的${kb['course']}`);
+
     const data = {
       "first": {
         "value": "👏明天的课程安排如下",

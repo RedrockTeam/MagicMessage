@@ -5,6 +5,7 @@
  */
 import request from 'request-promise';
 import getAccessToken from './getAccessToken';
+import moment from 'moment';
 
 export default async function(touser, templateId, url, topColor = "#FF0000", data = {}) {
   const accessToken = await getAccessToken();
@@ -21,7 +22,7 @@ export default async function(touser, templateId, url, topColor = "#FF0000", dat
     json: true
   });
   if ($return && $return['errcode'] == 0) {
-    console.log(`给openid: ${touser}} 的模板消息发送成功`);
+    console.log(`${moment()}给openid: ${touser} 的模板消息发送成功`);
   }
   return $return;
 }

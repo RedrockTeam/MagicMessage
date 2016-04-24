@@ -6,9 +6,13 @@
 import Sequelize from 'sequelize';
 import { db } from '../config';
 
-const con = new Sequelize(db.database, db.username, db.password, {
-  host: db.host || 'localhost',
-  logging: false
-});
+const option = {
+  host: db.host || 'localhost'
+};
+if (db.logging === false) {
+  option.logging =  false;
+}
+
+const con = new Sequelize(db.database, db.username, db.password, option);
 console.log('DB Connected!');
 export default con;
