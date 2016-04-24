@@ -134,3 +134,41 @@ exports.updateState = async function(ctx, next) {
     info: 'ok'
   }
 };
+
+/**
+ * 即时消息
+ * @param ctx
+ * @param next
+ */
+import templateSender from '../service/sendModelTemplateHttp';
+exports.instantMessage = async function(ctx, next) {
+  const param = ctx.request.body;
+  if (!param['openid'] || !param['message']) {
+    return ctx.body = {
+      status: 1,
+      info: 'param invalid'
+    };
+  }
+  const sender = param['sender'] || '匿名';
+  const tid = 'vJ2Sf-qkhB9rXPqeMRx1JzjsD03xg7g6dfSx0EYnWtc';
+  const data = {
+    "first": {
+      "value": "有人发给你一个新的悄悄话",
+      "color": "#173177"
+    },
+    "keyword1": {
+      "value": sender,
+      "color": "#173177"
+    },
+    "keyword2": {
+      "value": moment().format('YYYY-MM-DD HH:mm:ss'),
+      "color": "#FF0099"
+    },
+    "remark": {
+      "value": param['message'],
+      "color": "#173177"
+    }
+  };
+
+  templateSender(param['openid'], tid, param['url'] || '', '#FF0000', data);
+};
