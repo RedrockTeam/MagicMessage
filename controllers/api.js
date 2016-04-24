@@ -154,7 +154,7 @@ exports.instantMessage = async function(ctx, next) {
   for (let openid of param['openid'].split('|')) {
     const data = {
       "first": {
-        "value": "有人发给你一个新的悄悄话",
+        "value": "有人发给你一个新的消息",
         "color": "#173177"
       },
       "keyword1": {
@@ -163,11 +163,11 @@ exports.instantMessage = async function(ctx, next) {
       },
       "keyword2": {
         "value": moment().format('YYYY-MM-DD HH:mm:ss'),
-        "color": "#FF0099"
+        "color": "#173177"
       },
       "remark": {
-        "value": param['message'],
-        "color": "#173177"
+        "value": `留言内容: ${param['message']}`,
+        "color": "#FF0099"
       }
     };
 
