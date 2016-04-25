@@ -8,7 +8,7 @@ import modelTask from '../models/task';
 
 const Times = {
   everyDay: ['22:00'],
-  everyClass: ['07:50', '09:50', '13:50', '15:55', '18:50', '20:40'],
+  everyClass: ['07:50', '09:55', '13:50', '15:55', '18:50', '20:40'],
   none: []
 };
 const templateIds = {
@@ -18,7 +18,7 @@ const templateIds = {
 };
 export default async function(openid, type) {
   modelSchedule.findOrCreate({
-    where: {openid: openid},
+    where: {openid: openid, type: 'kebiao'},
     defaults: { openid: openid, template_id: templateIds[type], type: 'kebiao', data: {type: type} }
   }).spread(function(schedule, created) {
     if (!created) {
