@@ -40,7 +40,12 @@ async function GenText(schedule, task) {
   }
 }
 
-const courseHashMap = ['一二节', '三四节', '七八节', '九十节', '十十一节'];
+const courseHashMap = {
+  'period-2': ['一二节', '三四节', '五六节', '七八节', '九十节', '十一十二节'],
+  'period-3': ['一二三节', '三四五节', '五六七节', '七八九节', '九十十一节', '十一十二十三节'],
+  'period-4': ['一二节三四', '三四节', '五六七八节', '七八节', '一晚上', '十一十二节']
+};
+
 async function GenKebiao(schedule, task) {
   const openid = schedule['openid'];
   const url = schedule['data']['url'] || task['data']['url'] || `http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/CourseTable/CourseTable/index/openid/${openid}/token/gh_68f0a1ffc303.html`;
@@ -97,7 +102,7 @@ async function GenKebiao(schedule, task) {
         return true;
       }
       return false;
-    }).map(kb => `${courseHashMap[kb['hash_lesson']]}的${kb['course']}`);
+    }).map(kb => `${courseHashMap['period-' + kb['period']][kb['hash_lesson']]}的${kb['course']}`);
 
     const data = {
       "first": {
