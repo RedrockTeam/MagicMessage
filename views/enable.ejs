@@ -41,18 +41,46 @@
           <input id="everyDay" class="weui_switch" type="checkbox" v-model="everyDay">
         </div>
       </div>
+      <div class="weui_cell weui_cell_select weui_select_after" v-show="everyDay">
+        <div class="weui_cell_hd">通知时间</div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <select class="weui_select" name="remindTime" v-model="remindTime">
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="weui_cells weui_cells_form">
       <div class="weui_cell weui_cell_switch">
         <div class="weui_cell_hd weui_cell_primary">每课推送</div>
         <div class="weui_cell_ft">
           <input id="everyClass" class="weui_switch" type="checkbox" v-model="everyClass">
         </div>
       </div>
+      <div class="weui_cell weui_cell_select weui_select_after" v-show="everyClass">
+        <div class="weui_cell_hd">提前时间</div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <select class="weui_select" name="earlier" v-model="earlier">
+            <option value="10">10分钟</option>
+            <option value="15">15分钟</option>
+            <option value="20">20分钟</option>
+            <option value="25">25分钟</option>
+            <option value="30">30分钟</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="weui_cells ">
       <article class="weui_article"><h1>说明:</h1>
-        <section>每日推送: 每天晚上的 22:00 会下发一条明日的课程汇总</section>
-        <section>每课推送: 每节课上课前 10 分钟会下发一条提醒通知</section>
+        <section>每日推送: 每天会在约定时间下发一条明日的课程通知</section>
+        <section>每课推送: 每节课上课前 N 分钟会下发一条提醒通知</section>
+        <section>Bug 报告: 红岩网校产品交流群(164126675)</section>
       </article>
     </div>
 
@@ -88,7 +116,7 @@
     <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
     <div class="weui_text_area">
       <h2 class="weui_msg_title">保存成功</h2>
-      <p class="weui_msg_desc">小帮手会主动提醒你上课哟</p>
+      <!--<p class="weui_msg_desc">小帮手会在下次提醒你</p>-->
     </div>
     <div class="weui_opr_area">
       <p class="weui_btn_area">
@@ -108,7 +136,9 @@
     data: {
       everyDay: false,
       everyClass: false,
-      showLoading: true
+      showLoading: true,
+      earlier: 10,
+      remindTime: '22:00'
     },
     methods: {
       save: function(ev) {
@@ -120,7 +150,9 @@
             type: 'kebiao',
             openid: openid,
             everyDay: this.everyDay,
-            everyClass:  this.everyClass
+            everyClass:  this.everyClass,
+            remindTime: this.remindTime,
+            earlier: this.earlier
           },
           success: function(data) {
             if (data && data['status'] === 0) {
@@ -155,6 +187,12 @@
       if (data && data['status'] === 0) {
         vm.everyClass = data['data']['everyClass'];
         vm.everyDay = data['data']['everyDay'];
+        if (data['data']['remindTime']) {
+          vm.remindTime = data['data']['remindTime'];
+        }
+        if (data['data']['earlier']) {
+          vm.earlier = data['data']['earlier'];
+        }
       }
     }
   });

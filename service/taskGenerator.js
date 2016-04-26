@@ -6,7 +6,7 @@
 // 生成 task callback
 import moment from 'moment';
 import sendModelTemplateHttp from './sendModelTemplateHttp';
-import getKebiaoInfo from './getKebiaoInfo';
+import getKebiaoInfo from './getKebiaoInfo'
 
 async function GenText(schedule, task) {
   const openid = schedule.openid;
@@ -36,7 +36,7 @@ async function GenText(schedule, task) {
     }
   };
   return async function () {
-    await sendModelTemplateHttp(openid, tid, url, '#FF0000', data);
+    return await sendModelTemplateHttp(openid, tid, url, '#FF0000', data);
   }
 }
 
@@ -89,7 +89,7 @@ async function GenKebiao(schedule, task) {
         }
       };
       return async function() {
-        await sendModelTemplateHttp(openid, schedule['template_id'], url, '#FF0000', data);
+        return await sendModelTemplateHttp(openid, schedule['template_id'], url, '#FF0000', data);
       }
     } else {
       return () => {};
@@ -123,10 +123,11 @@ async function GenKebiao(schedule, task) {
       }
     };
     return async function() {
-      await sendModelTemplateHttp(openid, schedule['template_id'], url, '#FF0000', data);
+      return await sendModelTemplateHttp(openid, schedule['template_id'], url, '#FF0000', data);
     }
   }
-  return async function() {};
+
+  return async () => {};
 }
 
 /**

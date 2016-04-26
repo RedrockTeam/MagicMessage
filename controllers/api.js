@@ -102,12 +102,17 @@ exports.status = async function(ctx, next) {
     everyDay = true;
   }
 
+  const remindTime = schedule.data['remindTime'],
+    earlier = schedule.data['earlier'];
+
   return ctx.body = {
     status: 0,
     info: 'ok',
     data: {
       everyDay: everyDay,
-      everyClass: everyClass
+      everyClass: everyClass,
+      remindTime,
+      earlier
     }
   }
 };
@@ -121,13 +126,17 @@ exports.updateState = async function(ctx, next) {
       info: 'param not valid'
     };
   }
+  const option = {
+    remindTime: param['remindTime'],
+    earlier: param['earlier']
+  };
 
   if ('true' == param['everyDay']) {
-    await kebiaoRegister(param['openid'], 'everyDay');
+    await kebiaoRegister(param['openid'], 'everyDay', option);
   } else if ('true' == param['everyClass']) {
-    await kebiaoRegister(param['openid'], 'everyClass');
+    await kebiaoRegister(param['openid'], 'everyClass', option);
   } else {
-    await kebiaoRegister(param['openid'], 'none');
+    await kebiaoRegister(param['openid'], 'none', option);
   }
   return ctx.body = {
     status: 0,

@@ -5,45 +5,57 @@
  */
 import modelSchedule from '../models/schedule';
 import modelTask from '../models/task';
+import moment from 'moment';
 
-const Times = {
-  everyDay: ['22:00'],
-  everyClass: ['07:50', '09:55', '13:50', '15:55', '18:50', '20:40'],
-  none: []
-};
+const timeEveryClassStart = ['08:00', '10:05', '14:00', '16:05', '19:00', '20:50'];
 const templateIds = {
   everyDay: '7R2_kbC_FoXP7o9oFWxpkzvzgcz04L8CpjfG6g7NkRA',
-  everyClass: 'XgBPsF4rb4A0GUkoP-WgsFwhVUpgKv8G1SMevcKLWLc',
-  none: ''
+  everyClass: 'XgBPsF4rb4A0GUkoP-WgsFwhVUpgKv8G1SMevcKLWLc'
 };
-export default async function(openid, type) {
+
+export default async function(openid, type, option = {}) {
+  const earlier = Number(option['earlier']) || 10; // 提早多少分钟通知
+  const _validRemindTime = moment(option['remindTime'], 'HH:mm').format('HH:mm');
+  const everyDayRemindTime = _validRemindTime !== 'Invalid date' ? _validRemindTime : '22:00'; // 通知时间
+
+  const defaultData = { openid: openid, template_id: templateIds[type], type: 'kebiao', data: {type: type} };
+  switch (type) {
+    case 'everyClass': defaultData.data.earlier = earlier; break;
+    case 'everyDay': defaultData.data.remindTime = everyDayRemindTime;
+  }
   modelSchedule.findOrCreate({
     where: {openid: openid, type: 'kebiao'},
-    defaults: { openid: openid, template_id: templateIds[type], type: 'kebiao', data: {type: type} }
-  }).spread(function(schedule, created) {
-    if (!created) {
-      schedule.update({
-        template_id: templateIds[type],
-        data: {type: type}
-      }).then(function() {});
+    defaults: defaultData
+  }).spread(async (schedule, created) => {
+    if (!created) { // row already exists
+      await schedule.update(defaultData);
     }
 
-    const plainSchedule = schedule.get({plain: true});
-    const scheduleId = plainSchedule.id;
-    modelTask
+    const scheduleId = schedule.id;
+    modelTask // 这里删除已有的 task
       .findAll({where: {schedule_id: scheduleId}})
-      .then(async function(oldScheduledTasks) {
+      .then(async oldScheduledTasks => {
         for (let t of oldScheduledTasks) {
           await t.destroy();
         }
       });
 
-    Times[type].map(async (time, no) => {
-      await modelTask.create({time: time, schedule_id: scheduleId, data: {
+    if (type === 'everyClass') {
+      timeEveryClassStart.forEach(async (time, no) => {
+        const sendTime = moment(time, 'HH:mm').add(-earlier, 'm').format('HH:mm');
+        await modelTask.create({time: sendTime, schedule_id: scheduleId, data: {
+          kebiaoType: type,
+          courseNo: no,
+          earlier: earlier
+        }});
+      });
+    } else if (type === 'everyDay') {
+      await modelTask.create({time: everyDayRemindTime, schedule_id: scheduleId, data: {
         kebiaoType: type,
-        courseNo: no
+        remindTime: everyDayRemindTime
       }});
-    });
-
+    } else if (type === 'none') {
+      // do nothing
+    }
   });
 };
