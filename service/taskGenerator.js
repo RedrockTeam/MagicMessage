@@ -61,10 +61,11 @@ async function GenKebiao(schedule, task) {
       if (kb['week'].indexOf(nowWeek) == -1) return false;
       return true;
     });
+    const earlier = schedule['data']['earlier'] || 10;
     if (course[0]) {
       const data = {
         "first": {
-          "value": "👏你有以下课程将在10分钟后开始!",
+          "value": `👏你有以下课程将在${earlier}分钟后开始!`,
           "color": "#173177"
         },
         "keyword1": {
