@@ -102,8 +102,9 @@ exports.status = async function(ctx, next) {
     everyDay = true;
   }
 
-  const remindTime = schedule.data['remindTime'],
-    earlier = schedule.data['earlier'];
+  let remindTime = '22:00', earlier = 10;
+  try {remindTime = schedule.data['remindTime'];} catch(e) {}
+  try {earlier = schedule.data['earlier'];} catch(e) {}
 
   return ctx.body = {
     status: 0,
