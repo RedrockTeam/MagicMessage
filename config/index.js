@@ -13,7 +13,8 @@ const defaultConfig = {
     database: 'MagicMessage',
     username: 'root',
     password: ''
-  }
+  },
+  sendLimit: 10 // 同时发请求的数量
 };
 
 const cfgs = [];

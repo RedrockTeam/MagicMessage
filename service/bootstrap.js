@@ -10,8 +10,9 @@ import modelSchedule from '../models/schedule';
 import modelTask from '../models/task';
 import taskGenerator from './taskGenerator';
 import TaskQueue from './TaskQueue';
+import config from '../config';
 
-const queue = new TaskQueue(10);
+const queue = new TaskQueue(config.sendLimit);
 const scheduled = schedule.scheduleJob('*/1 * * * *', () => {
   const nowMinute = moment().format('HH:mm');
   const nowDate = moment().format('YYYY-MM-DD');
@@ -20,7 +21,7 @@ const scheduled = schedule.scheduleJob('*/1 * * * *', () => {
   }}).then(async tasks => {
     for (let task of tasks) {
       const schedule = await modelSchedule.findById(task.schedule_id);
-      const _task = await taskGenerator(schedule.get({plain: true}), task.get({plain: true}));
+      const _task = await taskGenerator(schedule, task);
       queue.run(_task);
     }
   });
