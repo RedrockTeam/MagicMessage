@@ -43,7 +43,7 @@ async function GenText(schedule, task) {
 const courseHashMap = {
   'period-2': ['一二节', '三四节', '五六节', '七八节', '九十节', '十一十二节'],
   'period-3': ['一二三节', '三四五节', '五六七节', '七八九节', '九十十一节', '十一十二十三节'],
-  'period-4': ['一二节三四', '三四节', '五六七八节', '七八节', '一晚上', '十一十二节']
+  'period-4': ['一早上', '三四节', '一下午', '七八节', '一晚上', '十一十二节']
 };
 
 async function GenKebiao(schedule, task) {
