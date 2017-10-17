@@ -7,7 +7,7 @@ import request from 'request-promise';
 import modelCache from '../models/cache';
 
 export default async function(openid) {
-  const url = `http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/CourseTable/CourseTable/json/openid/${openid}/token/gh_68f0a1ffc303.html`;
+  const url = `https://wx.idsbllp.cn/MagicLoop/index.php?s=/addon/CourseTable/CourseTable/json/openid/${openid}/token/gh_68f0a1ffc303.html`;
   const kbInDb = modelCache.findOne({where: {
     type: 'kebiao',
     key: openid

@@ -9,7 +9,7 @@ import crypto from 'crypto';
 import modelSystem from '../models/system';
 
 const token = "gh_68f0a1ffc303";
-const url = "http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/Api/Api/apiAccess_Token";
+const url = "https://wx.idsbllp.cn/MagicLoop/index.php?s=/addon/Api/Api/apiAccess_Token";
 
 async function getRemoteAccessToken() {
   const timestamp = Math.floor(+new Date() / 1000);

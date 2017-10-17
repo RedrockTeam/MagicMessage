@@ -48,7 +48,7 @@ const courseHashMap = {
 
 async function GenKebiao(schedule, task) {
   const openid = schedule['openid'];
-  const url = schedule['data']['url'] || task['data']['url'] || `http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/CourseTable/CourseTable/index/openid/${openid}/token/gh_68f0a1ffc303.html`;
+  const url = schedule['data']['url'] || task['data']['url'] || `https://wx.idsbllp.cn/MagicLoop/index.php?s=/addon/CourseTable/CourseTable/index/openid/${openid}/token/gh_68f0a1ffc303.html`;
   const kebiaoInfo = await getKebiaoInfo(openid);
   const kebiao = JSON.parse(kebiaoInfo.course);
   const nowWeek = kebiao['nowWeek'];
